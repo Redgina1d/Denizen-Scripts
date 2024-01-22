@@ -305,7 +305,7 @@ item_ballista:
           type: "<&7><&l>| Type: <&4>Ballista"
           rare: "<&7><&l>| Rarity: <&5>Epic"
           req_lvl: "<n><&8>♦ <&l><&n>Level Required:<&f> 12"
-          text: "<n><&7><&o>A huge crossbow used to<n><&7><&o>defend a castle during a siege.."
+          text: "<n><&7><&o>A huge crossbow used to<n><&7><&o>defend a castle during a siege."
           attributes: "<n><&8><&l>Stats:<n><&7>[<element[🏹].color[#805D38]><&7>] Crossbow damage: <&c>+16<n><&7>[<&a>£<&7>] Weight:<&a> 7.6"
         attribute_modifiers:
           arrow_damage:
