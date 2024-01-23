@@ -116,12 +116,14 @@ bow_damage:
               - determine passively cancelled
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
               - actionbar targets:<player> "<&c><&l><[smn_bolts]>"
+              - drop <context.item> quantity:1 <player.location>
         - if <[weapontype]> = ballista:
           - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != 0:
             - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != longbolt:
               - determine passively cancelled
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
               - actionbar targets:<player> "<&c><&l><[smn_longbolts]>"
+              - drop <context.item> quantity:1 <player.location>
         - if <script[<player.item_in_hand.script.name>].data_key[data.stats.attribute_modifiers.arrow_damage.amount]||0> != 0:
           - if <script[<context.item.script.name>].data_key[data.stats.arrof_damage]||0> != 0:
             - define arrow_personal_dmg <script[<context.item.script.name>].data_key[data.stats.arrof_damage]||0>
@@ -321,7 +323,7 @@ item_ballista:
 
 ## Образцы стрел.
 
-item_iron_bold:
+item_iron_arroww:
     type: item
     debug: false
     material: arrow
