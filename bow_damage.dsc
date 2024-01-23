@@ -52,13 +52,13 @@ bow_damage:
             - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != long_arrow:
               - determine passively cancelled
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
-              - actionbar targets:<player> "<&c><&l><[smn_longarrows]>"
+              - actionbar targets:<player> "<&c><&l>smn_longarrows"
         - if <[weapontype]> = bow:
           - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != 0:
             - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != arrow:
               - determine passively cancelled
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
-              - actionbar targets:<player> "<&c><&l><[smn_arrows]>"
+              - actionbar targets:<player> "<&c><&l>smn_arrows"
         - if <player.has_flag[bowcharge]>:
           # Физический урон суммируется от показателя лука, и от показателя самой стрелы.
           - if <script[<player.item_in_hand.script.name>].data_key[data.stats.attribute_modifiers.arrow_damage.amount]||0> != 0:
@@ -115,14 +115,14 @@ bow_damage:
             - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != bolt:
               - determine passively cancelled
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
-              - actionbar targets:<player> "<&c><&l><[smn_bolts]>"
+              - actionbar targets:<player> "<&c><&l>smn_bolts"
               - drop <context.item> quantity:1 <player.location>
         - if <[weapontype]> = ballista:
           - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != 0:
-            - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != longbolt:
+            - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != long_bolt:
               - determine passively cancelled
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
-              - actionbar targets:<player> "<&c><&l><[smn_longbolts]>"
+              - actionbar targets:<player> "<&c><&l>smn_longbolts"
               - drop <context.item> quantity:1 <player.location>
         - if <script[<player.item_in_hand.script.name>].data_key[data.stats.attribute_modifiers.arrow_damage.amount]||0> != 0:
           - if <script[<context.item.script.name>].data_key[data.stats.arrof_damage]||0> != 0:
