@@ -238,7 +238,7 @@ item_samurai_longbow:
         display:  "Samurai Longbow"
         rarity: epic
         weapon: ranged
-        weapon_type: long_bow
+        weapon_type: large_bow
         bow_damage: 10
         lvl_req: 10
         lore:
