@@ -3,7 +3,7 @@ bow_damage:
   debug: false
   events:
     on entity damaged by arrow:
-      - determine cancelled passively
+      - determine passively cancelled
       - playsound sound:entity_arrow_hit <context.entity.location> volume:1 pitch:1
       # У сущности в которую попали на время устанавливается 1-тиковый фрейм неуязвимости, чтобы по ней прошёл весь урон от стрелы.
       - adjust <context.entity> max_no_damage_duration:1t
@@ -41,9 +41,6 @@ bow_damage:
         - flag <player> chargesound:!
       - if <player.has_flag[largebowcharging]>:
         - flag <player> largebowcharging:!
-      - if <context.item.script.name||0> != 0:
-	- define scriptofarrow <context.item.script.name>
-	- flag <context.projectile> arrow_item:<[scriptofarrow]>
       - define weapontype <script[<player.item_in_hand.script.name>].data_key[data.stats.weapon_type]>
       - if <[weapontype]> = bow || <[weapontype]> = large_bow:
         - if <[weapontype]> = large_bow:
@@ -62,7 +59,11 @@ bow_damage:
               - determine passively cancelled
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
               - actionbar targets:<player> "<&c><&l>smn_arrows"
-        - if <player.has_flag[bowcharge]>:
+	- if <context.item.script.name||0> != 0:
+	  - define scriptofarrow <context.item.script.name>
+	  - if <context.projectile||0> != 0:
+	    - flag <context.projectile> arrow_item:<[scriptofarrow]>
+          - if <player.has_flag[bowcharge]>:
           # Физический урон суммируется от показателя лука, и от показателя самой стрелы.
           - if <script[<player.item_in_hand.script.name>].data_key[data.stats.bow_damage]||0> != 0:
             - if <script[<context.item.script.name>].data_key[data.stats.arrof_damage]||0> != 0:
