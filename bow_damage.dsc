@@ -43,7 +43,7 @@ bow_damage:
         - flag <player> largebowcharging:!
       - if <context.item.has_lore> = true:
         # Накладывает флаг на выпущенный снаряд, чтобы его можно было подобрать даже если он кастомный.
-				- flag <context.projectile> arrow_item:<context.item.script.name>
+	- flag <context.projectile> arrow_item:<context.item.script.name>
       - define weapontype <script[<player.item_in_hand.script.name>].data_key[data.stats.weapon_type]>
       - if <[weapontype]> = bow || <[weapontype]> = large_bow:
         - if <[weapontype]> = large_bow:
@@ -185,10 +185,10 @@ bow_damage:
     # Возможность подбирать выпущенные кастомные стрелы.
     on player picks up launched arrow:
       - determine passively cancelled
-			- define item <context.arrow.flag[arrow_item]>
-			- remove  <context.arrow>
-			- give <[item]> to:<player.inventory>
-			- playsound sound:entity_item_pickup <player.location> volume:0.8 pitch:1
+      - define item <context.arrow.flag[arrow_item]>
+      - remove  <context.arrow>
+      - give <[item]> to:<player.inventory>
+      - playsound sound:entity_item_pickup <player.location> volume:0.8 pitch:1
 
 
 ## Образцы луков.
