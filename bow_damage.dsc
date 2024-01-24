@@ -1,6 +1,6 @@
 bow_damage:
   type: world
-  debug: true
+  debug: false
   events:
     on entity damaged by arrow:
       - determine cancelled passively
@@ -39,14 +39,17 @@ bow_damage:
     on player shoots bow:
       - if <player.has_flag[chargesound]>:
         - flag <player> chargesound:!
-      - if <player.has_flag[largebowshooting]>:
-        - flag <player> largebowshooting:!
+      - if <player.has_flag[largebowcharging]>:
+        - flag <player> largebowcharging:!
+      - if <context.item.has_lore> = true:
+        # Накладывает флаг на выпущенный снаряд, чтобы его можно было подобрать даже если он кастомный.
+				- flag <context.projectile> arrow_item:<context.item.script.name>
       - define weapontype <script[<player.item_in_hand.script.name>].data_key[data.stats.weapon_type]>
       - if <[weapontype]> = bow || <[weapontype]> = large_bow:
         - if <[weapontype]> = large_bow:
           - if <player.is_sneaking> = false:
+            - determine passively cancelled
             - actionbar targets:<player> "<&c><&l><[smn_longbow]>"
-            - determine cancelled
           # Проверка на тип стрел.
           - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != 0:
             - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != long_arrow:
@@ -61,10 +64,10 @@ bow_damage:
               - actionbar targets:<player> "<&c><&l>smn_arrows"
         - if <player.has_flag[bowcharge]>:
           # Физический урон суммируется от показателя лука, и от показателя самой стрелы.
-          - if <script[<player.item_in_hand.script.name>].data_key[data.stats.attribute_modifiers.arrow_damage.amount]||0> != 0:
+          - if <script[<player.item_in_hand.script.name>].data_key[data.stats.bow_damage]||0> != 0:
             - if <script[<context.item.script.name>].data_key[data.stats.arrof_damage]||0> != 0:
               - define arrow_personal_dmg <script[<context.item.script.name>].data_key[data.stats.arrof_damage]||0>
-              - define bowdmg <script[<player.item_in_hand.script.name>].data_key[data.stats.attribute_modifiers.arrow_damage.amount].mul[<player.flag[bowcharge]>]>
+              - define bowdmg <script[<player.item_in_hand.script.name>].data_key[data.stats.bow_damage].mul[<player.flag[bowcharge]>]>
               - flag <context.projectile> arrof_damage:<[bowdmg].add[<[arrow_personal_dmg]>]||0>
           ## МАГИЧЕСКИЙ
           - if <script[<context.item.script.name>].data_key[data.stats.arrof_magic_dmg]||0> != 0:
@@ -86,10 +89,10 @@ bow_damage:
         # Если не дождался зарядки, урон от самого лука и бонусы от стрел становятся значительно хуже.
         - else:
           ## ФИЗИЧЕСКИЙ
-          - if <script[<player.item_in_hand.script.name>].data_key[data.stats.attribute_modifiers.arrow_damage.amount]||0> != 0:
+          - if <script[<player.item_in_hand.script.name>].data_key[data.stats.bow_damage]||0> != 0:
             - if <script[<context.item.script.name>].data_key[data.stats.arrof_damage]||0> != 0:
               - define arrow_personal_dmg_penalty <script[<context.item.script.name>].data_key[data.stats.arrof_damage].div[2.5]||0>
-              - define bowdmg_penalty <script[<player.item_in_hand.script.name>].data_key[data.stats.attribute_modifiers.arrow_damage.amount].div[2.5]||0>
+              - define bowdmg_penalty <script[<player.item_in_hand.script.name>].data_key[data.stats.bow_damage].div[2.5]||0>
               - flag <context.projectile> arrof_damage:<[bowdmg_penalty].add[<[arrow_personal_dmg_penalty]>]||0>
           ## МАГИЧЕСКИЙ
           - if <script[<context.item.script.name>].data_key[data.stats.arrof_magic_dmg]||0> != 0:
@@ -124,10 +127,10 @@ bow_damage:
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
               - actionbar targets:<player> "<&c><&l>smn_longbolts"
               - drop <context.item> quantity:1 <player.location>
-        - if <script[<player.item_in_hand.script.name>].data_key[data.stats.attribute_modifiers.arrow_damage.amount]||0> != 0:
+        - if <script[<player.item_in_hand.script.name>].data_key[data.stats.bow_damage]||0> != 0:
           - if <script[<context.item.script.name>].data_key[data.stats.arrof_damage]||0> != 0:
             - define arrow_personal_dmg <script[<context.item.script.name>].data_key[data.stats.arrof_damage]||0>
-            - define bowdmg <script[<player.item_in_hand.script.name>].data_key[data.stats.attribute_modifiers.arrow_damage.amount]>
+            - define bowdmg <script[<player.item_in_hand.script.name>].data_key[data.stats.bow_damage]>
             - flag <context.projectile> arrof_damage:<[bowdmg].add[<[arrow_personal_dmg]>]||0>
         ## МАГИЧЕСКИЙ
         - if <script[<context.item.script.name>].data_key[data.stats.arrof_magic_dmg]||0> != 0:
@@ -157,28 +160,35 @@ bow_damage:
           - if <player.is_sneaking> = false:
             - determine passively cancelled
             - actionbar targets:<player> "<&c><&l><[smn_longbow]>"
-          - if <player.item_in_hand.material.name> = bow:
-            - flag <player> chargesound
-            - flag <player> bowcd expire:14t
-            - wait 15t
-            - if !<player.has_flag[bowcd]>:
-              - flag <player> bowcharge:1
-              - flag <player> bowcd expire:8t
-              - wait 9t
-              - if <player.has_flag[bowcharge]>:
-                - if <player.flag[bowcharge]> = 1:
-                  - if !<player.has_flag[bowcd]>:
-                    - flag <player> bowcharge:!
-                    - flag <player> bowcharge:1.5
-                    - if <player.has_flag[chargesound]>:
-                      - if <player.item_in_hand.material.name> = bow:
-                        - playsound <player.location> sound:item_crossbow_quick_charge_3 pitch:1.5 volume:1
-                  - else:
-                    - stop
+        - if <player.item_in_hand.material.name> = bow:
+          - flag <player> chargesound
+          - flag <player> bowcd expire:14t
+          - wait 15t
+          - if !<player.has_flag[bowcd]>:
+            - flag <player> bowcharge:1
+            - flag <player> bowcd expire:8t
+            - wait 9t
+            - if <player.has_flag[bowcharge]>:
+              - if <player.flag[bowcharge]> = 1:
+                - if !<player.has_flag[bowcd]>:
+                  - flag <player> bowcharge:!
+                  - flag <player> bowcharge:1.5
+                  - if <player.has_flag[chargesound]>:
+                    - if <player.item_in_hand.material.name> = bow:
+                      - playsound <player.location> sound:item_crossbow_quick_charge_3 pitch:1.5 volume:1
+                - else:
+                  - stop
             - else:
               - stop
         - if <[weapontype]> = large_bow:
           - flag <player> largebowcharging
+    # Возможность подбирать выпущенные кастомные стрелы.
+    on player picks up launched arrow:
+      - determine passively cancelled
+			- define item <context.arrow.flag[arrow_item]>
+			- remove  <context.arrow>
+			- give <[item]> to:<player.inventory>
+			- playsound sound:entity_item_pickup <player.location> volume:0.8 pitch:1
 
 
 ## Образцы луков.
@@ -198,19 +208,16 @@ item_yew_bow:
         rarity: epic
         weapon: ranged
         weapon_type: bow
-        lvl_req: 12
+        bow_damage: 8
+        lvl_req: 10
         lore:
           item: "<n><&8><&l>| Item: <&c>Ranged Weapon"
           type: "<&7><&l>| Type: <&4>Bow"
           rare: "<&7><&l>| Rarity: <&5>Epic"
-          req_lvl: "<n><&8>♦ <&l><&n>Level Required:<&f> 12"
+          req_lvl: "<n><&8>♦ <&l><&n>Level Required:<&f> 10"
           text: "<n><&7><&o>Excellent yew bow. Its bowstring<n><&7><&o>sings in the wind, and the handle lies<n><&7><&o>in the hand as comfortably as possible."
-          attributes: "<n><&8><&l>Stats:<n><&7>[<element[🏹].color[#805D38]><&7>] Bow damage: <&c>From 4 to 15<n><&7>[<&a>£<&7>] Weight:<&a> 5.0"
+          attributes: "<n><&8><&l>Stats:<n><&7>[<element[🏹].color[#805D38]><&7>] Ranged damage: <&c>From 3.2 to 12<n><&7>[<&a>£<&7>] Weight:<&a> 5.0"
         attribute_modifiers:
-          arrow_damage:
-            type: custom
-            operation: ADD_NUMBER
-            amount: +10
           generic_movement_speed:
             type: vanilla
             operation: ADD_SCALAR
@@ -232,19 +239,16 @@ item_samurai_longbow:
         rarity: epic
         weapon: ranged
         weapon_type: long_bow
-        lvl_req: 12
+        bow_damage: 10
+        lvl_req: 10
         lore:
           item: "<n><&8><&l>| Item: <&c>Ranged Weapon"
           type: "<&7><&l>| Type: <&4>Long bow"
           rare: "<&7><&l>| Rarity: <&5>Epic"
-          req_lvl: "<n><&8>♦ <&l><&n>Level Required:<&f> 12"
+          req_lvl: "<n><&8>♦ <&l><&n>Level Required:<&f> 10"
           text: "<n><&7><&o>A long and strong bow that belonged<n><&7><&o>to one of the warriors of the Far East.<n><&7><&o>You have to crouch to shoot with it."
-          attributes: "<n><&8><&l>Stats:<n><&7>[<element[🏹].color[#805D38]><&7>] Bow damage: <&c>From 5.6 to 21<n><&7>[<&a>£<&7>] Weight:<&a> 7.0"
+          attributes: "<n><&8><&l>Stats:<n><&7>[<element[🏹].color[#805D38]><&7>] Ranged damage: <&c>From 4 to 15<n><&7>[<&a>£<&7>] Weight:<&a> 7.0"
         attribute_modifiers:
-          arrow_damage:
-            type: custom
-            operation: ADD_NUMBER
-            amount: +14
           generic_movement_speed:
             type: vanilla
             operation: ADD_SCALAR
@@ -252,13 +256,14 @@ item_samurai_longbow:
             slot: any
 
 
-item_new_crossbow:
+item_mechanical_crossbow:
     type: item
     debug: false
     material: crossbow
     display name: "Mechanical Crossbow"
     enchantments:
     - DURABILITY:4
+    - QUICK_CHARGE:3
     mechanisms:
       hides: ATTRIBUTES|ENCHANTS
     data:
@@ -267,25 +272,23 @@ item_new_crossbow:
         rarity: epic
         weapon: ranged
         weapon_type: crossbow
-        lvl_req: 12
+        bow_damage: 8.5
+        lvl_req: 11
         lore:
           item: "<n><&8><&l>| Item: <&c>Ranged Weapon"
           type: "<&7><&l>| Type: <&4>Crossow"
           rare: "<&7><&l>| Rarity: <&5>Epic"
-          req_lvl: "<n><&8>♦ <&l><&n>Level Required:<&f> 12"
-          text: "<n><&7><&o>Crossbow of the latest design,<n><&7><&o>created by Faustus Scipion."
-          attributes: "<n><&8><&l>Stats:<n><&7>[<element[🏹].color[#805D38]><&7>] Crossbow damage: <&c>+13<n><&7>[<&a>£<&7>] Weight:<&a> 5.0"
+          req_lvl: "<n><&8>♦ <&l><&n>Level Required:<&f> 11"
+          text: "<n><&7><&o>Crossbow of the latest design, created<n><&7><&o>by Faustus Scipion. Thanks to its<n><&7><&o> convenient design, it can be recharged<n><&7><&o>quickly and easily."
+          attributes: "<n><&8><&l>Stats:<n><&7>[<element[🏹].color[#805D38]><&7>] Ranged damage: <&c>+8.5<n><&7>[<&a>£<&7>] Weight:<&a> 5.0"
         attribute_modifiers:
-          arrow_damage:
-            type: custom
-            operation: ADD_NUMBER
-            amount: +13
           generic_movement_speed:
             type: vanilla
             operation: ADD_SCALAR
             amount: -0.05
             slot: any
 
+# Отрицательное значение для зачарования почему-то не работает.
 item_ballista:
     type: item
     debug: false
@@ -293,6 +296,7 @@ item_ballista:
     display name: "Ballista"
     enchantments:
     - DURABILITY:5
+    - QUICK_CHARGE:-3
     mechanisms:
       hides: ATTRIBUTES|ENCHANTS
     data:
@@ -323,18 +327,18 @@ item_ballista:
 
 ## Образцы стрел.
 
-item_iron_arroww:
+item_quality_arrow:
     type: item
     debug: false
     material: arrow
-    display name: "Iron-tipped Arrow"
+    display name: "Quality Arrow"
     enchantments:
     - DURABILITY:1
     mechanisms:
       hides: ATTRIBUTES|ENCHANTS
     data:
       stats:
-        display:  "Iron-tipped Arrow"
+        display:  "Quality Arrow"
         rarity: rare
         arrow_type: arrow
         arrof_damage: 3
@@ -342,21 +346,21 @@ item_iron_arroww:
           item: "<n><&8><&l>| Item: <&c>Ammo"
           type: "<&7><&l>| Type: <&4>Arrow"
           rare: "<&7><&l>| Rarity: <&9>Rare"
-          text: "<n><&7><&o>Quality iron tipped<n><&7><&o>arrow used by the military."
+          text: "<n><&7><&o>Quality iron-tipped<n><&7><&o>arrow used by the military."
           attributes: "<n><&8><&l>Stats:<n><&7>[<&8>🏹<&7>] Arrow physical damage: <&c>+3"
 
-item_iron_longarrow:
+item_quality_longarrow:
     type: item
     debug: false
     material: arrow
-    display name: "Iron-tipped Long Arrow"
+    display name: "Quality Long Arrow"
     enchantments:
     - DURABILITY:1
     mechanisms:
       hides: ATTRIBUTES|ENCHANTS
     data:
       stats:
-        display:  "Iron-tipped Long Arrow"
+        display:  "Quality Long Arrow"
         rarity: rare
         arrow_type: long_arrow
         arrof_damage: 4
@@ -367,18 +371,18 @@ item_iron_longarrow:
           text: "<n><&7><&o>Quality iron tipped long<n><&7><&o>arrow used by strong warriors."
           attributes: "<n><&8><&l>Stats:<n><&7>[<&8>🏹<&7>] Arrow physical damage: <&c>+4"
 
-item_iron_bolt:
+item_quality_bolt:
     type: item
     debug: false
     material: arrow
-    display name: "Iron-tipped Bolt"
+    display name: "Quality Bolt"
     enchantments:
     - DURABILITY:1
     mechanisms:
       hides: ATTRIBUTES|ENCHANTS
     data:
       stats:
-        display:  "Iron-tipped Bolt"
+        display:   "Quality Bolt"
         rarity: rare
         arrow_type: bolt
         arrof_damage: 3
@@ -389,18 +393,18 @@ item_iron_bolt:
           text: "<n><&7><&o>Quality iron tipped<n><&7><&o>bolt used by the military."
           attributes: "<n><&8><&l>Stats:<n><&7>[<&8>🏹<&7>] Arrow physical damage: <&c>+3"
 
-item_iron_longbolt:
+item_quality_longbolt:
     type: item
     debug: false
     material: arrow
-    display name: "Iron-tipped Long Bolt"
+    display name: "Quality Long Bolt"
     enchantments:
     - DURABILITY:1
     mechanisms:
       hides: ATTRIBUTES|ENCHANTS
     data:
       stats:
-        display:  "Iron-tipped Long Bolt"
+        display:  "Quality Long Bolt"
         rarity: rare
         arrow_type: long_bolt
         arrof_damage: 4
