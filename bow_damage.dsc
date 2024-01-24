@@ -41,8 +41,9 @@ bow_damage:
         - flag <player> chargesound:!
       - if <player.has_flag[largebowcharging]>:
         - flag <player> largebowcharging:!
-      - if <context.item.material.name> = arrow:
-        - flag <context.projectile> arrow_item:<context.item.script.name>
+      - if <context.item.script.name||0> != 0:
+	- define scriptofarrow <context.item.script.name>
+	- flag <context.projectile> arrow_item:<[scriptofarrow]>
       - define weapontype <script[<player.item_in_hand.script.name>].data_key[data.stats.weapon_type]>
       - if <[weapontype]> = bow || <[weapontype]> = large_bow:
         - if <[weapontype]> = large_bow:
