@@ -5,7 +5,6 @@ bow_damage:
     on entity damaged by arrow:
       - determine passively cancelled
       - playsound sound:entity_arrow_hit <context.entity.location> volume:1 pitch:1
-      # У сущности в которую попали на время устанавливается 1-тиковый фрейм неуязвимости, чтобы по ней прошёл весь урон от стрелы.
       - adjust <context.entity> max_no_damage_duration:1t
       # Далее, один за другим наносятся нужные типы урона.
       ## ФИЗИЧЕСКИЙ ##
