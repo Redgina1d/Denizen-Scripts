@@ -41,9 +41,8 @@ bow_damage:
         - flag <player> chargesound:!
       - if <player.has_flag[largebowcharging]>:
         - flag <player> largebowcharging:!
-      - if <context.item.has_lore> = true:
-        # Накладывает флаг на выпущенный снаряд, чтобы его можно было подобрать даже если он кастомный.
-	- flag <context.projectile> arrow_item:<context.item.script.name>
+      - if <context.item.material.name> = arrow:
+        - flag <context.projectile> arrow_item:<context.item.script.name>
       - define weapontype <script[<player.item_in_hand.script.name>].data_key[data.stats.weapon_type]>
       - if <[weapontype]> = bow || <[weapontype]> = large_bow:
         - if <[weapontype]> = large_bow:
@@ -305,6 +304,7 @@ item_ballista:
         rarity: epic
         weapon: ranged
         weapon_type: ballista
+	bow_damage: 14
         lvl_req: 12
         lore:
           item: "<n><&8><&l>| Item: <&c>Ranged Weapon"
@@ -314,10 +314,6 @@ item_ballista:
           text: "<n><&7><&o>A huge crossbow used to<n><&7><&o>defend a castle during a siege."
           attributes: "<n><&8><&l>Stats:<n><&7>[<element[🏹].color[#805D38]><&7>] Crossbow damage: <&c>+16<n><&7>[<&a>£<&7>] Weight:<&a> 7.6"
         attribute_modifiers:
-          arrow_damage:
-            type: custom
-            operation: ADD_NUMBER
-            amount: +14
           generic_movement_speed:
             type: vanilla
             operation: ADD_SCALAR
