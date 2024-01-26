@@ -52,7 +52,6 @@ bow_damage:
           - if <player.is_sneaking> = false:
             - determine passively cancelled
             - actionbar targets:<player> "<&c><&l>smn_longbow"
-            - drop <context.item> quantity:1 <player.location>
           # Проверка на тип стрел.
           - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != 0:
             - if <script[<context.item.script.name>].data_key[data.stats.arrow_type]||0> != long_arrow:
