@@ -233,7 +233,7 @@ bow_damage_mob:
                 - if <context.entity.has_flag[mob_arrow_cold_dmg]> = false:
                   - if <context.entity.has_flag[mob_arrow_lightning_dmg]> = false:
                     - if <context.entity.has_flag[mob_arrow_poison_dmg]> = false:
-                      - flag <context.projectile> arrof_damage:10
+                      - flag <context.projectile> arrof_damage:6
                       - flag <context.projectile> shooter:<context.entity>
 
 
