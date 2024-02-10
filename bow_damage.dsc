@@ -28,7 +28,7 @@ bow_damage:
       ## ЛЕДЯНОЙ ##
       - if <context.projectile.has_flag[arrof_cold_damage]>:
         - wait 1t
-        - hurt <context.entity||0> <context.projectile.flag[arrof_cold_damage]> cause:FREEZE
+        - hurt <context.entity||0> <context.projectile.flag[arrof_cold_damage]> cause:DRYOUT
       ## ЯДОВИТЫЙ ##
       - if <context.projectile.has_flag[arrof_poison_damage]>:
         - wait 1t
