@@ -1,3 +1,6 @@
+## Advanced bows and types of arrow damage mechanic
+## By: Rёdginald
+
 bow_damage:
   type: world
   debug: false
