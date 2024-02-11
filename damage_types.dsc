@@ -13,10 +13,6 @@ display_dmg:
     - adjust <[display]> interpolation_duration:25t
     - adjust <[display]> translation:0,1,0
 
-## <&8>🗡<&7>
-## <&c>🔥<&7>
-## 
-
 resistances:
   type: world
   debug: false
