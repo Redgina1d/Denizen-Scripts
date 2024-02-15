@@ -1,5 +1,5 @@
 ## Secondhand Attack Mechanic
-## By: Rёdginald
+## In developing.
 
 secondhand_attack:
     type: world
