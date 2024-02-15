@@ -61,7 +61,7 @@ bow_damage:
               - determine passively cancelled
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
               - actionbar targets:<player> "<&c><&l>smn_arrows"
-        - run bow_check def:<player>|<context.item>|<context.projectile>|<player.item_in_hand>
+        - run bow_check def:<player>|<context.item>|<context.projectile>|<script[<player.item_in_hand.script.name>].data_key[data.stats.weapon_type]||0>|<script[<player.item_in_hand.script.name>].data_key[data.stats.bow_damage]||0>
         - if <[weapontype]> = bow:
           - itemcooldown bow duration:0.5s
         - if <[weapontype]> = large_bow:
@@ -83,9 +83,8 @@ bow_damage:
               - drop <context.item> quantity:1 <player.location>
             - if <script[<player.item_in_offhand.script.name>].data_key[data.stats.arrow_type]||0> = 0 || <player.item_in_offhand.material> != air:
               - determine passively cancelled
-              - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
               - actionbar targets:<player> "<&c><&l>smn_ballista_offhand"
-        - run bow_check def:<player>|<context.item>|<context.projectile>|<player.item_in_hand>
+        - run bow_check def:<player>|<context.item>|<context.projectile>|<script[<player.item_in_hand.script.name>].data_key[data.stats.weapon_type]||0>|<script[<player.item_in_hand.script.name>].data_key[data.stats.bow_damage]||0>
         - flag <player> bowcharge:!
         - if <[weapontype]> = crossbow:
           - itemcooldown crossbow duration:0.5s
@@ -168,25 +167,25 @@ bow_damage_mob:
                       - flag <context.projectile> shooter:<context.entity>
 bow_check:
   type: task
-  debug: false
-  definitions: shooter|item|proj|bow
+  debug: true
+  definitions: shooter|item|proj|bow|bowdaamg
   script:
-  - if <script[<[bow].script.name>].data_key[data.stats.bow_damage]||0> != 0:
+  - if <[bowdaamg]||0> != 0:
     - if <script[<[item].script.name>].data_key[data.stats.arrof_damage]||0> != 0:
-      - define <[rangeweapontype]> <script[<[bow].script.name>].data_key[data.stats.weapon_type]||0>
-      - if <[rangeweapontype]> = bow || <[rangeweapontype]> = large_bow:
+      - if <[bow]> = bow || <[bow]> = large_bow:
         - if <[shooter].has_flag[bowcharge]> = true:
-          - define bowdmg <script[<[bow].script.name>].data_key[data.stats.bow_damage].mul[<[shooter].flag[bowcharge]>]||0>
-          - define arrow_personal_dmg <script[<[item].script.name>].data_key[data.stats.arrof_damage]||0>
+          - define bowdmg <[bowdaamg].mul[<[shooter].flag[bowcharge]>]||0>
+          - define arrow_personal_dmg <script[<[item].script.name>].data_key[data.stats.arrof_damage].mul[<[shooter].flag[bowcharge]>]||0>
           - define penalty <element[1]>
         - else:
-          - define bowdmg <script[<[bow].script.name>].data_key[data.stats.bow_damage].div[2.5]||0>
+          - define bowdmg <[bowdaamg].div[2.5]||0>
           - define arrow_personal_dmg <script[<[item].script.name>].data_key[data.stats.arrof_damage].div[2.5]||0>
           - define penalty <element[2.5]>
       - else:
-        - define bowdmg <script[<[bow].script.name>].data_key[data.stats.bow_damage]||0>
+        - define bowdmg <[bowdaamg]||0>
         - define arrow_personal_dmg <script[<[item].script.name>].data_key[data.stats.arrof_damage]||0>
         - define penalty <element[1]>
+      - wait 1t
       - flag <[proj]> arrof_damage:<[bowdmg].add[<[arrow_personal_dmg]>]||0>
     - if <script[<[item].script.name>].data_key[data.stats.arrof_magic_dmg]||0> != 0:
       - flag <[proj]> arrof_magic_damage:<script[<[item].script.name>].data_key[data.stats.arrof_magic_dmg].div[<[penalty]>]||0>
