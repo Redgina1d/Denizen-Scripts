@@ -81,6 +81,9 @@ bow_damage:
               - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
               - actionbar targets:<player> "<&c><&l>smn_longbolts"
               - drop <context.item> quantity:1 <player.location>
+            - if <script[<player.item_in_offhand.script.name>].data_key[data.stats.arrow_type]||0> = 0 || <player.item_in_offhand.material> != air:
+              - determine passively cancelled
+              - actionbar targets:<player> "<&c><&l>smn_ballista_offhand"
         - run bow_check def:<player>|<context.item>|<context.projectile>|<player.item_in_hand>
         - flag <player> bowcharge:!
         - if <[weapontype]> = crossbow:
@@ -97,6 +100,9 @@ bow_damage:
           - if <player.is_sneaking> = false:
             - determine passively cancelled
             - actionbar targets:<player> "<&c><&l>smn_longbow"
+          - if <script[<player.item_in_offhand.script.name>].data_key[data.stats.arrow_type]||0> = 0 || <player.item_in_offhand.material> != air:
+            - determine passively cancelled
+            - actionbar targets:<player> "<&c><&l>smn_longbow_offhand"
         - if <player.item_in_hand.material.name> = bow:
           - flag <player> chargesound
           - flag <player> bowcd expire:14t
