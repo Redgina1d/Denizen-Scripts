@@ -83,6 +83,7 @@ bow_damage:
               - drop <context.item> quantity:1 <player.location>
             - if <script[<player.item_in_offhand.script.name>].data_key[data.stats.arrow_type]||0> = 0 || <player.item_in_offhand.material> != air:
               - determine passively cancelled
+              - playsound <player.location> sound:ITEM_CROSSBOW_SHOOT pitch:1.5 volume:1
               - actionbar targets:<player> "<&c><&l>smn_ballista_offhand"
         - run bow_check def:<player>|<context.item>|<context.projectile>|<player.item_in_hand>
         - flag <player> bowcharge:!
