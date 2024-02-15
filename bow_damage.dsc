@@ -93,6 +93,10 @@ bow_damage:
     on player right clicks block:
       - if <player.item_in_hand.material.name> = bow:
         - define weapontype <script[<player.item_in_hand.script.name>].data_key[data.stats.weapon_type]>
+        - if <[weapontype]> = ballista:
+          - if <player.is_sneaking> = false:
+            - determine passively cancelled
+            - actionbar targets:<player> "<&c><&l>smn_ballista_sneaking"
         - if <[weapontype]> = bow || <[weapontype]> = large_bow:
           - if <player.has_flag[bowcharge]>:
             - flag <player> bowcharge:!
