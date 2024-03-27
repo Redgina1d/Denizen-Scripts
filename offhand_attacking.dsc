@@ -8,7 +8,7 @@ offhand_attack:
     debug: false
     events:
         on player right clicks entity:
-          - if <player.item_in_offhand> != 0 && <player.item_in_offhand.script> != 0:
+          - if <player.item_in_offhand||0> != 0 && <player.item_in_offhand.script||0> != 0:
             - if <script[<player.item_in_offhand.script.name>].data_key[data.stats.weapon]> = melee:
               - define weapon_type <script[<player.item_in_offhand.script.name>].data_key[data.stats.weapon_type]>
               - if <[weapon_type]> != polearm && <[weapon_type]> != scythe && <[weapon_type]> != spear && <[weapon_type]> != longsword && <[weapon_type]> != longaxe && <[weapon_type]> != longmace:
@@ -18,33 +18,33 @@ offhand_attack:
                       - determine passively cancelled
                       - define hh <player.has_effect[FAST_DIGGING]>
                       - define ff <player.has_effect[SLOW_DIGGING]>
-                      - if <[hh]> = true:
+                      - if <[hh]>:
                         - define hh_raw_amp <element[<player.effects_data.filter[get[type].equals[FAST_DIGGING]].parse[get[amplifier]].formatted>]>
-                      - if <[ff]> = true:
+                      - if <[ff]>:
                         - define ff_raw_amp <element[<player.effects_data.filter[get[type].equals[SLOW_DIGGING]].parse[get[amplifier]].formatted>]>
                       - define parsed_atk_cd <script[<player.item_in_offhand.script.name>].data_key[data.stats.attribute_modifiers.generic_attack_speed.amount].mul[-10]>
-                      - if <[hh]> = true:
+                      - if <[hh]>:
                         - define hh_bonus <[hh_raw_amp].mul[10]>
-                      - if <[ff]> = true:
+                      - if <[ff]>:
                         - define ff_bonus <[ff_raw_amp].mul[10]>
                       - define raw_pen <[parsed_atk_cd].add[20]>
                       - define raw <[parsed_atk_cd].add[10]>
-                      - if <[hh]> = false && <[ff]> = true:
+                      - if !<[hh]> && <[ff]>:
                         - if !<player.has_flag[strong_sechand]>:
                           - define ff_pen <[ff_raw_amp].mul[20]>
                           - flag <player> sechand_atk_cd expire:<[raw_pen].add[<[ff_raw_amp]>]>t
                         - else:
                           - define ff_str <[ff_raw_amp].mul[10]>
                           - flag <player> sechand_atk_cd expire:<[raw].add[<[ff_str]>]>t
-                      - if <[hh]> = true && <[ff]> = false:
-                        - if <player.has_flag[strong_sechand]> = false:
+                      - if <[hh]> && !<[ff]>:
+                        - if !<player.has_flag[strong_sechand]>:
                           - define hh_pen <[hh_raw_amp].mul[10]>
                           - flag <player> sechand_atk_cd expire:<[raw_pen].sub[<[hh_pen]>]>t
                         - else:
                           - define hh_str <[hh_raw_amp].mul[20]>
                           - flag <player> sechand_atk_cd expire:<[raw].sub[<[hh_str]>]>t
-                      - if <[hh]> = true && <[ff]> = true:
-                        - if <player.has_flag[strong_sechand]> = false:
+                      - if <[hh]> && <[ff]>:
+                        - if !<player.has_flag[strong_sechand]>:
                           - define ff_pen <[ff_raw_amp].mul[-20]>
                           - define hh_pen <[hh_raw_amp].mul[10]>
                           - define duo <[ff_pen].add[<[hh_pen]>]>
@@ -55,7 +55,7 @@ offhand_attack:
                           - define duo_str <[ff_str].add[<[hh_str]>]>
                           - flag <player> sechand_atk_cd expire:<[raw_pen].add[<[duo]>]>t
                       - else:
-                        - if <player.has_flag[strong_sechand]> = false:
+                        - if !<player.has_flag[strong_sechand]>:
                           - flag <player> sechand_atk_cd expire:<[raw_pen]>t
                         - else:
                           - flag <player> sechand_atk_cd expire:<[raw]>t
@@ -66,7 +66,7 @@ offhand_damaging:
   debug: false
   definitions: player|entity|it
   script:
-  - if <player.is_on_ground> = false:
+  - if !<player.is_on_ground>:
     - define loc1 <player.location.y>
     - wait 1t
     - define loc2 <player.location.y>
@@ -80,9 +80,9 @@ offhand_damaging:
     - define we <[player].has_effect[WEAKNESS]>
     - define st <[player].has_effect[INCREASE_DAMAGE]>
     - define wt <script[<[player].item_in_offhand.script.name>].data_key[data.stats.attribute_modifiers.weapon_type]>
-    - if <[st]> = true:
+    - if <[st]>:
       - define str_bonus <element[<player.effects_data.filter[get[type].equals[INCREASE_DAMAGE]].parse[get[amplifier]].formatted>]>
-    - if <[we]> = true:
+    - if <[we]>:
       - define weak_bonus <element[<player.effects_data.filter[get[type].equals[WEAKNESS]].parse[get[amplifier]].formatted>]>
     - if <[crit]||0> = 0:
       - define atk_dmg <[it].div[1.5]>
@@ -96,18 +96,18 @@ offhand_damaging:
       - define sprint true
     - if <[entity]> != 0:
       - define entloc <[entity].location>
-      - if <[st]> = true && <[we]> = false:
-        - if <[ss]> = false:
+      - if <[st]> && !<[we]>:
+        - if !<[ss]>:
           - hurt <[entity]> <[atk_dmg].add[<[str_bonus].div[2]>]> source:<[player]> cause:ENTITY_EXPLOSION
         - else:
           - hurt <[entity]> <[it].add[<[str_bonus]>].mul[<[el]>]> source:<[player]> cause:ENTITY_EXPLOSION
-      - if <[st]> = false && <[we]> = true:
-        - if <[ss]> = false:
+      - if !<[st]> && <[we]>:
+        - if !<[ss]>:
           - hurt <[entity]> <[atk_dmg].sub[<[weak_bonus]>].mul[1]> source:<[player]> cause:ENTITY_EXPLOSION
         - else:
           - hurt <[entity]> <[it].sub[<[weak_bonus]>].mul[<[el]>]> source:<[player]> cause:ENTITY_EXPLOSION
-      - if <[st]> = true && <[we]> = true:
-        - if <[ss]> = false:
+      - if <[st]> && <[we]>:
+        - if !<[ss]>:
           - define str <[str_bonus].div[2]>
           - define weak <[atk_dmg].sub[<[weak_bonus]>].mul[1]>
           - hurt <[entity]> <[weak].add[<[str]>]> source:<[player]> cause:ENTITY_EXPLOSION
@@ -115,12 +115,12 @@ offhand_damaging:
           - define weak <[it].sub[<[weak_bonus]>].mul[1]>
           - hurt <[entity]> <[weak].add[<[str_bonus]>]> source:<[player]> cause:ENTITY_EXPLOSION
       - else:
-        - if <[ss]> = false:
+        - if !<[ss]>:
           - hurt <[entity]> <[it].div[1.5]> source:<[player]> cause:ENTITY_EXPLOSION
         - else:
           - hurt <[entity]> <[it]> source:<[player]> cause:ENTITY_EXPLOSION
       - run offhand_checkdur def:<[player]>|<[crit]>
-      - if <[sprint]> = true:
+      - if <[sprint]>:
         - if <[entity]> != 0:
           - wait 3t
           - if <[gm]> != creative:
@@ -155,7 +155,7 @@ offhand_checkdur:
   script:
   - if <[player].gamemode> != creative:
     - define offh <[player].item_in_offhand>
-    - if <[crit]> = true:
+    - if <[crit]>:
       - define par <element[2]>
     - else:
       - define par <element[1]>
