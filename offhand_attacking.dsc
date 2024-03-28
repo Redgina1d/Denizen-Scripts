@@ -5,7 +5,7 @@
 
 offhand_attack:
     type: world
-    debug: false
+    debug: true
     events:
         on player right clicks entity:
           - if <player.item_in_offhand||0> != 0 && <player.item_in_offhand.script||0> != 0:
