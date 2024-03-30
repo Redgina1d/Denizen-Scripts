@@ -76,6 +76,8 @@ offhand_damaging:
   - if <[player].worldguard.test_flag[pvp]> = true || <[player].location.in_region> = false:
     - if <[entity].is_player>:
       - define gm <[entity].gamemode>
+    - else:
+      - define gm survival
     - define ss <[player].has_flag[strong_sechand]>
     - define we <[player].has_effect[WEAKNESS]>
     - define st <[player].has_effect[INCREASE_DAMAGE]>
@@ -138,24 +140,17 @@ offhand_damaging:
                   - if <[value]> != 0:
                     - if <[value].is_player>:
                       - define valgm <[value].gamemode>
+                    - else:
+                      - define valgm survival
                     - hurt <[value]> 1.5 source:<[player]> cause:ENTITY_ATTACK
                     - if <[value]> != 0:
-                      - if <[value].entity_type> = player:
-                        - if <[valgm]> != creative:
-                          - push <[value]> origin:<[value].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.2
-                      - else:
+                      - if <[valgm]> != creative:
                         - push <[value]> origin:<[value].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.2
             - else:
-              - if <[entity].entity_type> = player:
-                - if <[gm]> != creative:
-                  - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.1
-              - else:
+              - if <[gm]> != creative:
                 - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.1
           - else:
-            - if <[entity].entity_type> = player:
-              - if <[gm]> != creative:
-                - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.15
-            - else:
+            - if <[gm]> != creative:
               - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.15
 offhand_checkdur:
   type: task
