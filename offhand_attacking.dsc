@@ -79,7 +79,7 @@ offhand_damaging:
     - define ss <[player].has_flag[strong_sechand]>
     - define we <[player].has_effect[WEAKNESS]>
     - define st <[player].has_effect[INCREASE_DAMAGE]>
-    - define wt <script[<[player].item_in_offhand.script.name>].data_key[data.stats.attribute_modifiers.weapon_type]>
+    - define wt <script[<[player].item_in_offhand.script.name>].data_key[data.stats.weapon_type]>
     - if <[st]>:
       - define str_bonus <element[<player.effects_data.filter[get[type].equals[INCREASE_DAMAGE]].parse[get[amplifier]].formatted>]>
     - if <[we]>:
@@ -94,6 +94,8 @@ offhand_damaging:
       - define crit true
     - if <[player].is_sprinting>:
       - define sprint true
+    - else:
+      - define sprint false
     - if <[entity]> != 0:
       - define entloc <[entity].location>
       - if <[st]> && !<[we]>:
@@ -122,7 +124,6 @@ offhand_damaging:
       - run offhand_checkdur def:<[player]>|<[crit]>
       - if <[sprint]>:
         - if <[entity]> != 0:
-          - wait 3t
           - if <[gm]> != creative:
             - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.3
             - playsound at:<[entity].location> sound:entity_player_attack_knockback pitch:1 volume:1
@@ -130,7 +131,6 @@ offhand_damaging:
         - if <[entity]> != 0:
           - if <[crit]||0> = 0:
             - if <[wt]> != axe:
-              - wait 3t
               - if <[gm]> != creative:
                 - playeffect at:<player.location.forward.add[0,1.2,0]> effect:sweep_attack offset:0 visibility:100
                 - playsound at:<[entity].location> sound:entity_player_attack_sweep volume:1 pitch:1
