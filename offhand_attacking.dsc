@@ -15,6 +15,16 @@ offhand_attack:
                 - if <player.has_flag[sechand_atk_cd]> = false:
                   - if <player.is_sneaking> = false:
                     - if <context.entity> != null:
+                      - if !<player.is_on_ground>:
+                        - define loc1 <player.location.y>
+                        - wait 1t
+                        - define loc2 <player.location.y>
+                        - if <[loc2]> < <[loc1]> && !<[player].is_sprinting>:
+                          - define crit <element[1.5]>
+                        - else:
+                          - define crit 0
+                      - else:
+                        - define crit 0
                       - determine passively cancelled
                       - define hh <player.has_effect[FAST_DIGGING]>
                       - define ff <player.has_effect[SLOW_DIGGING]>
@@ -60,18 +70,12 @@ offhand_attack:
                         - else:
                           - flag <player> sechand_atk_cd expire:<[raw]>t
                         - animate <player> animation:ARM_SWING_OFFHAND for:<server.online_players>
-                        - run offhand_damaging def:<player>|<context.entity>|<script[<player.item_in_offhand.script.name>].data_key[data.stats.attribute_modifiers.generic_attack_damage.amount]>
+                        - run offhand_damaging def:<player>|<context.entity>|<script[<player.item_in_offhand.script.name>].data_key[data.stats.attribute_modifiers.generic_attack_damage.amount]>|<[crit]>
 offhand_damaging:
   type: task
   debug: false
-  definitions: player|entity|it
+  definitions: player|entity|it|crit
   script:
-  - if !<player.is_on_ground>:
-    - define loc1 <player.location.y>
-    - wait 1t
-    - define loc2 <player.location.y>
-    - if <[loc2]> < <[loc1]> && !<[player].is_sprinting>:
-      - define crit <element[1.5]>
   - wait 1t
   - if <[player].worldguard.test_flag[pvp]> = true || <[player].location.in_region> = false:
     - if <[entity].is_player>:
