@@ -127,17 +127,18 @@ offhand_damaging:
       - if <[sprint]>:
         - if <[entity]> != 0:
           - if <[gm]> != creative:
-            - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.3
-            - playsound at:<[entity].location> sound:entity_player_attack_knockback pitch:1 volume:1
+            - push <[entity]> origin:<[entloc]> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.3
+            - playsound at:<[entloc]> sound:entity_player_attack_knockback pitch:1 volume:1
       - else:
         - if <[entity]> != 0:
           - if <[crit]||0> = 0:
             - if <[wt]> != axe:
               - if <[gm]> != creative:
                 - playeffect at:<player.location.forward.add[0,1.2,0]> effect:sweep_attack offset:0 visibility:100
-                - playsound at:<[entity].location> sound:entity_player_attack_sweep volume:1 pitch:1
-                - foreach <[entity].location.find.living_entities.within[1].exclude[<[player]>].exclude[<[entity]>]>:
+                - playsound at:<[entloc]> sound:entity_player_attack_sweep volume:1 pitch:1
+                - foreach <[entloc].find.living_entities.within[1].exclude[<[player]>].exclude[<[entity]>]>:
                   - if <[value]> != 0:
+                    - define valloc <[value].location>
                     - if <[value].is_player>:
                       - define valgm <[value].gamemode>
                     - else:
@@ -145,13 +146,13 @@ offhand_damaging:
                     - hurt <[value]> 1.5 source:<[player]> cause:ENTITY_ATTACK
                     - if <[value]> != 0:
                       - if <[valgm]> != creative:
-                        - push <[value]> origin:<[value].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.2
+                        - push <[value]> origin:<[valloc]> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.2
             - else:
               - if <[gm]> != creative:
-                - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.1
+                - push <[entity]> origin:<[entloc]> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.1
           - else:
             - if <[gm]> != creative:
-              - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.15
+              - push <[entity]> origin:<[entloc]> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.15
 offhand_checkdur:
   type: task
   debug: false
