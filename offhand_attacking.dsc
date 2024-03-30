@@ -17,7 +17,7 @@ offhand_attack:
                     - if <context.entity> != null:
                       - if !<player.is_on_ground>:
                         - define loc1 <player.location.y>
-                        - wait 1t
+                        - wait 2t
                         - define loc2 <player.location.y>
                         - if <[loc2]> < <[loc1]> && !<[player].is_sprinting>:
                           - define crit <element[1.5]>
