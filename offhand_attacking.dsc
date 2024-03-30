@@ -66,7 +66,7 @@ offhand_attack:
                         - else:
                           - flag <player> sechand_atk_cd expire:<[raw]>t
                         - animate <player> animation:ARM_SWING_OFFHAND for:<server.online_players>
-                        - run offhand_damaging def:<player>|<context.entity>|<script[<player.item_in_offhand.script.name>].data_key[data.stats.attribute_modifiers.generic_attack_damage.amount]>|<[crit]>
+                        - run offhand_damaging def:<player>|<context.entity>|<script[<player.item_in_offhand.script.name>].data_key[data.stats.attribute_modifiers.generic_attack_damage.amount]>|<[crit]||0>
 offhand_damaging:
   type: task
   debug: false
