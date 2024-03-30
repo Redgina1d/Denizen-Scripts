@@ -140,13 +140,22 @@ offhand_damaging:
                       - define valgm <[value].gamemode>
                     - hurt <[value]> 1.5 source:<[player]> cause:ENTITY_ATTACK
                     - if <[value]> != 0:
-                      - if <[valgm]> != creative:
+                      - if <[value].entity_type> = player:
+                        - if <[valgm]> != creative:
+                          - push <[value]> origin:<[value].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.2
+                      - else:
                         - push <[value]> origin:<[value].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.2
             - else:
-              - if <[gm]> != creative:
+              - if <[entity].entity_type> = player:
+                - if <[gm]> != creative:
+                  - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.1
+              - else:
                 - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.1
           - else:
-            - if <[gm]> != creative:
+            - if <[entity].entity_type> = player:
+              - if <[gm]> != creative:
+                - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.15
+            - else:
               - push <[entity]> origin:<[entity].location> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.15
 offhand_checkdur:
   type: task
