@@ -17,7 +17,7 @@ offhand_attack:
                     - if <context.entity> != null:
                       - if !<player.is_on_ground>:
                         - define loc1 <player.location.y>
-                        - wait 2t
+                        - wait 1t
                         - define loc2 <player.location.y>
                         - if <[loc2]> < <[loc1]> && !<[player].is_sprinting>:
                           - define crit <element[1.5]>
@@ -69,8 +69,8 @@ offhand_attack:
                           - flag <player> sechand_atk_cd expire:<[raw_pen]>t
                         - else:
                           - flag <player> sechand_atk_cd expire:<[raw]>t
-                        - animate <player> animation:ARM_SWING_OFFHAND for:<server.online_players>
                         - run offhand_damaging def:<player>|<context.entity>|<script[<player.item_in_offhand.script.name>].data_key[data.stats.attribute_modifiers.generic_attack_damage.amount]>|<[crit]||0>
+                        - animate <player> animation:ARM_SWING_OFFHAND for:<server.online_players>
 offhand_damaging:
   type: task
   debug: false
