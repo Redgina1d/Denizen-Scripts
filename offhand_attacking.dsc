@@ -131,7 +131,7 @@ offhand_damaging:
       - if <[sprint]>:
         - if <[entity]> != 0:
           - if <[gm]> != creative:
-            - push <[entity]> origin:<[entloc]> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.3
+            - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.3]>
             - playsound at:<[entloc]> sound:entity_player_attack_knockback pitch:1 volume:1
       - else:
         - if <[entity]> != 0:
@@ -150,13 +150,13 @@ offhand_damaging:
                     - hurt <[value]> 1.5 source:<[player]> cause:ENTITY_ATTACK
                     - if <[value]> != 0:
                       - if <[valgm]> != creative:
-                        - push <[value]> origin:<[valloc]> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.2
+                        - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.2]>
             - else:
               - if <[gm]> != creative:
-                - push <[entity]> origin:<[entloc]> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.1
+                - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.2]>
           - else:
             - if <[gm]> != creative:
-              - push <[entity]> origin:<[entloc]> destination:<[player].location.forward[7].add[0,1.5,0]> no_rotate speed:0.15
+              - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.2]>
 offhand_checkdur:
   type: task
   debug: false
