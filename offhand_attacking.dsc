@@ -137,7 +137,6 @@ offhand_damaging:
         - if <[entity]> != 0:
           - if <[crit]||0> = 0:
             - if <[wt]> != axe:
-              - if <[gm]> != creative:
                 - playeffect at:<player.location.forward.add[0,1.2,0]> effect:sweep_attack offset:0 visibility:100
                 - playsound at:<[entloc]> sound:entity_player_attack_sweep volume:1 pitch:1
                 - foreach <[entloc].find.living_entities.within[1].exclude[<[player]>].exclude[<[entity]>]>:
