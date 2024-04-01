@@ -104,6 +104,34 @@ offhand_damaging:
       - define sprint false
     - if <[entity]> != 0:
       - define entloc <[entity].location>
+    - if <[sprint]>:
+        - if <[entity]> != 0:
+          - if <[gm]> != creative:
+            - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.2]>
+            - playsound at:<[entloc]> sound:entity_player_attack_knockback pitch:1 volume:1
+    - else:
+        - if <[entity]> != 0:
+          - if <[crit]||0> = 0:
+            - if <[wt]> != axe:
+                - playeffect at:<player.location.forward.add[0,1.2,0]> effect:sweep_attack offset:0 visibility:100
+                - playsound at:<[entloc]> sound:entity_player_attack_sweep volume:1 pitch:1
+                - foreach <[entloc].find.living_entities.within[1].exclude[<[player]>].exclude[<[entity]>]>:
+                  - if <[value]> != 0:
+                    - define valloc <[value].location>
+                    - if <[value].is_player>:
+                      - define valgm <[value].gamemode>
+                    - else:
+                      - define valgm survival
+                    - hurt <[value]> 1.5 source:<[player]> cause:ENTITY_ATTACK
+                    - if <[value]> != 0:
+                      - if <[valgm]> != creative:
+                        - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.05]>
+            - else:
+              - if <[gm]> != creative:
+                - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.05]>
+          - else:
+            - if <[gm]> != creative:
+              - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.1]>
       - if <[st]> && !<[we]>:
         - if !<[ss]>:
           - hurt <[entity]> <[atk_dmg].add[<[str_bonus].div[2]>]> source:<[player]> cause:ENTITY_EXPLOSION
@@ -128,34 +156,6 @@ offhand_damaging:
         - else:
           - hurt <[entity]> <[it]> source:<[player]> cause:ENTITY_EXPLOSION
       - run offhand_checkdur def:<[player]>|<[crit]>
-      - if <[sprint]>:
-        - if <[entity]> != 0:
-          - if <[gm]> != creative:
-            - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.2]>
-            - playsound at:<[entloc]> sound:entity_player_attack_knockback pitch:1 volume:1
-      - else:
-        - if <[entity]> != 0:
-          - if <[crit]||0> = 0:
-            - if <[wt]> != axe:
-                - playeffect at:<player.location.forward.add[0,1.2,0]> effect:sweep_attack offset:0 visibility:100
-                - playsound at:<[entloc]> sound:entity_player_attack_sweep volume:1 pitch:1
-                - foreach <[entloc].find.living_entities.within[1].exclude[<[player]>].exclude[<[entity]>]>:
-                  - if <[value]> != 0:
-                    - define valloc <[value].location>
-                    - if <[value].is_player>:
-                      - define valgm <[value].gamemode>
-                    - else:
-                      - define valgm survival
-                    - hurt <[value]> 1.5 source:<[player]> cause:ENTITY_ATTACK
-                    - if <[value]> != 0:
-                      - if <[valgm]> != creative:
-                        - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.05]>
-            - else:
-              - if <[gm]> != creative:
-                - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.05]>
-          - else:
-            - if <[gm]> != creative:
-              - adjust <[entity]> velocity:<[player].location.direction.vector.mul[1.1]>
 offhand_checkdur:
   type: task
   debug: false
